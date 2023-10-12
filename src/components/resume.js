@@ -1,3 +1,4 @@
+import { StoredContext } from "@/context/context"
 import { Box, Chip, Divider, Grid, LinearProgress, Stack, Typography } from "@mui/material"
 
 const recomendations = {
@@ -7,7 +8,8 @@ const recomendations = {
     'Pésima': 'El sitio web no aplica o ignora la mayoría o todos los lineamientos de UI / UX, se recomienda hacer una refactorización estética completa del sitio y trabajar ampliamente en la usabilidad, es recomendable empezar a consultar con los usuarios para conocer sus necesidades'
 }
 
-export const RateResults = ({ results }) => {
+export const RateResults = ({ name, results }) => {
+    console.log(name,results)
     const sum = results.map(e => e.sliderValue).reduce((p, n) => p + n, 0)
     const avg = (sum / results.length)
 
@@ -31,7 +33,7 @@ export const RateResults = ({ results }) => {
                 <Grid container alignItems="center">
                     <Grid item xs>
                         <Typography gutterBottom variant="h4" component="div">
-                            Resultados
+                            Resultados: {name}
                         </Typography>
                     </Grid>
                     <Grid item>
