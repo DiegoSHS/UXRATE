@@ -6,8 +6,10 @@ export default function Records({ data }) {
     const results = JSON.parse(data)
     console.log(results)
     return (
-        <Box>
-            {results.map((e) => RateResults(e))}
+        <Box sx={{
+            my:10
+        }}>
+            {results.map((e) => RateResults({name:e.name,results:e.records}))}
         </Box>
     )
 }
