@@ -20,6 +20,7 @@ export const getStaticProps = async () => {
     return {
         props: {
             data: JSON.stringify(res)
-        }
+        },
+        revalidate: 1
     }
 }
