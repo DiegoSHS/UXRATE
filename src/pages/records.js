@@ -4,9 +4,10 @@ import { Box } from "@mui/material"
 
 export default function Records({ data }) {
     const results = JSON.parse(data)
+    console.log(results)
     return (
         <Box>
-            {results.map(({ name, records }) => RateResults({ name, records }))}
+            {results.map((e) => RateResults(e))}
         </Box>
     )
 }
