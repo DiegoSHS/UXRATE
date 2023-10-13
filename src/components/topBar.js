@@ -1,6 +1,6 @@
+import { StoredContext } from "@/context/context"
 import { Home, ViewModule } from "@mui/icons-material"
 import { AppBar, Button, Container, Slide, Toolbar, useScrollTrigger } from "@mui/material"
-import { useRouter } from "next/router"
 
 function HideOnScroll({ children }) {
     const trigger = useScrollTrigger()
@@ -12,18 +12,15 @@ function HideOnScroll({ children }) {
 }
 
 export const TopBarScroll = (props) => {
-    const { push } = useRouter()
-    const goIndex = () => {
-        push('/')
-    }
+    const { push } = StoredContext()
 
     return (
         <HideOnScroll {...props}>
-            <AppBar>
+            <AppBar color="default">
                 <Container maxWidth='sm'>
                     <Toolbar>
-                        <Button fullWidth sx={{ m: 1 }} onClick={goIndex} variant="contained" endIcon={<Home />}>Inicio</Button>
-                        <Button fullWidth sx={{ m: 1 }} onClick={()=>push('/records')} endIcon={<ViewModule />}>Registros</Button>
+                        <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>
+                        <Button fullWidth sx={{ m: 1 }} onClick={() => push('/records')} endIcon={<ViewModule />}>Registros</Button>
                     </Toolbar>
                 </Container>
             </AppBar>
