@@ -15,7 +15,7 @@ export default function Layout({ children }) {
             <CssBaseline enableColorScheme />
             <Toaster/>
             <Context>
-                <Container component='main' maxWidth='xs'>
+                <Container fixed component='main' maxWidth='sm'>
                     <TopBarScroll />
                     {children}
                 </Container>

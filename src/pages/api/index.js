@@ -1,20 +1,23 @@
 import { connex } from "@/models/database"
+import { createRecord, getRecords } from "@/models/transactions"
 
 export default async function handler(req, res) {
-  const { body, method } = req
   try {
+    const { body, method } = req
+    const collection = connex()
+    const reqbody = JSON.parse(body)
     switch (method) {
+      case 'GET':
+        const records = await getRecords(collection)
+        return res.status(200).json(records)
       case 'POST':
-        const collection = connex()
-        const saveObject = JSON.parse(body)
-        console.log(saveObject)
-        const ress = await collection.insertOne(saveObject)
-        return res.status(200).json({ msj: `inserted document:${ress.insertedId}`})
+        const ress = await createRecord(collection, reqbody)
+        return res.status(201).json({ msj: `inserted document:${ress.insertedId}` })
       default:
         return res.status(405).json({ msj: 'method not supported' })
     }
   } catch (error) {
-    return res.status(500).json({ msj: `something gone wrong: ${error.message}` })
+    return res.status(500).json({ msj: `something gone wrong: ${error.message}`, err: 1 })
   }
 
 }

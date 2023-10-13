@@ -20,7 +20,7 @@ export const TopBarScroll = (props) => {
     return (
         <HideOnScroll {...props}>
             <AppBar>
-                <Container maxWidth='xs'>
+                <Container maxWidth='sm'>
                     <Toolbar>
                         <Button fullWidth sx={{ m: 1 }} onClick={goIndex} variant="contained" endIcon={<Home />}>Inicio</Button>
                         <Button fullWidth sx={{ m: 1 }} onClick={()=>push('/records')} endIcon={<ViewModule />}>Registros</Button>

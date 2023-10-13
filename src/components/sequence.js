@@ -98,22 +98,15 @@ export default function RateSequence() {
             })
         })
         const data = await res.json()
-        console.log(data)
         return data
     }
     const handleSave = async () => {
         toast.promise(sendtoapi(), {
             loading: 'guardando',
-            success: (data) => `Guardado! ${data.msj}`,
+            success: (data) => data.err ? 'Error al guardar' : 'Guardado!',
             error: (data) => `${data.msj}`
         }, {
-            success: {
-                duration: 2000,
-                icon: <CheckCircle />
-            },
-            loading: {
-                icon: <CircularProgress />
-            }
+            position: 'top-right'
         })
     }
     const stepslen = steps.length
