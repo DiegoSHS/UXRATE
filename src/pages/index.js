@@ -21,7 +21,7 @@ export default function VerticalLinearStepper() {
         my: 40,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'center'
       }}
     >
       <Box sx={{
