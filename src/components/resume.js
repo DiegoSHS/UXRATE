@@ -1,6 +1,7 @@
 import { StoredContext } from "@/context/context"
-import { Delete } from "@mui/icons-material"
-import { Box, Chip, Divider, Grid, LinearProgress, Stack, Typography } from "@mui/material"
+import { Add, Delete } from "@mui/icons-material"
+import { Box, Chip, Container, Divider, Fab, Grid, LinearProgress, Stack, Typography } from "@mui/material"
+import { useRouter } from "next/router"
 
 const recomendations = {
     'Ideal': 'En general no hay recomendaciones muy significantes, el sitio web funciona de forma que los usuarios se sienten gratificados con su navegación en este',
@@ -9,14 +10,14 @@ const recomendations = {
     'Pésima': 'El sitio web no aplica o ignora la mayoría o todos los lineamientos de UI / UX, se recomienda hacer una refactorización estética completa del sitio y trabajar ampliamente en la usabilidad, es recomendable empezar a consultar con los usuarios para conocer sus necesidades'
 }
 
-export const RateResults = ({ name, results, id }) => {
+export const RateResult = ({ name, records, _id }) => {
     const { setOpenDialog, setSelectedItem } = StoredContext()
     const handleDelete = (e) => {
-        setSelectedItem(id)
+        setSelectedItem(_id)
         setOpenDialog(true)
     }
-    const sum = results.map(e => e.sliderValue).reduce((p, n) => p + n, 0)
-    const avg = (sum / results.length)
+    const sum = records.map(e => e.sliderValue).reduce((p, n) => p + n, 0)
+    const avg = (sum / records.length)
 
     const avgString = String(avg).substring(0, 4)
     const color =
@@ -71,11 +72,31 @@ export const RateResults = ({ name, results, id }) => {
                     }
                 </Typography>
                 {
-                    id && (
-                        <Chip key={id} label="Eliminar" active deleteIcon={<Delete />} clickable onClick={handleDelete} onDelete={handleDelete} variant="outlined" color="error" />
+                    _id && (
+                        <Chip key={_id} label="Eliminar" active deleteIcon={<Delete />} clickable onClick={handleDelete} onDelete={handleDelete} variant="outlined" color="error" />
                     )
                 }
             </Box>
         </Box>
     )
+}
+
+export const RateResults = ({ results }) => {
+    const { push } = StoredContext()
+    if (results.length === 0) {
+        return (
+            <Grid sx={{
+                display: 'flex',
+                alignContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+            }}>
+                <Typography align="center">Aún no hay nada registrado</Typography>
+                <Fab sx={{ m: 2 }} color="primary" onClick={() => { push('/') }} aria-label="Añadir nuevo">
+                    <Add />
+                </Fab>
+            </Grid>
+        )
+    }
+    return results.map(RateResult)
 }

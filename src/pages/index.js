@@ -1,11 +1,9 @@
 import { StoredContext } from '@/context/context'
 import { StarHalf, Style } from '@mui/icons-material'
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
-import { useRouter } from 'next/router'
 
 export default function VerticalLinearStepper() {
-  const { name, setName, setVisible } = StoredContext()
-  const { push } = useRouter()
+  const { name, setName, setVisible, push } = StoredContext()
   const handleChange = (e) => {
     setName(e.target.value)
   }
@@ -13,12 +11,11 @@ export default function VerticalLinearStepper() {
     e.preventDefault()
     if (!name || name == '') return
     setVisible(false)
-    push('/rate')
+    push('/advice')
   }
   return (
     <Box
       sx={{
-        my: 40,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
@@ -48,7 +45,7 @@ export default function VerticalLinearStepper() {
           required
           fullWidth
           id="name"
-          label="Nombre de la web"
+          label="Nombre de la app web"
           name="name"
           autoComplete="name"
           autoFocus

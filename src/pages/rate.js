@@ -1,15 +1,15 @@
-import RateSequence from "@/components/sequence";
-import { StoredContext } from "@/context/context";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import RateSequence from "@/components/sequence"
+import { StoredContext } from "@/context/context"
+import { useEffect } from "react"
 
 export default function Rate() {
-    const { push } = useRouter()
-    const { visible } = StoredContext()
+    const { visible, push } = StoredContext()
     useEffect(() => {
-        if(visible){
+        if (visible) {
             push('/')
         }
     }, [])
-    return (<RateSequence />)
+    return (
+        <RateSequence />
+    )
 }

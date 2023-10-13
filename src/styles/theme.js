@@ -11,11 +11,11 @@ const themes = { darkTheme, defaultTheme }
 
 export default function Layout({ children }) {
     return (
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider theme={defaultTheme}>
             <CssBaseline enableColorScheme />
-            <Toaster/>
+            <Toaster />
             <Context>
-                <Container fixed component='main' maxWidth='sm'>
+                <Container sx={{ my: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }} fixed component='main' maxWidth='sm'>
                     <TopBarScroll />
                     {children}
                 </Container>

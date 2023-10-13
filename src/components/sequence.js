@@ -1,11 +1,10 @@
-import { Box, Button, CircularProgress, Paper, Stepper } from '@mui/material'
+import { Box, Button, Paper, Stepper } from '@mui/material'
 import { useState } from 'react'
 import { RateResults } from './resume'
 import { RateStep } from './steps'
 import { StoredContext } from '@/context/context'
-import { useRouter } from 'next/router'
+import { saveRecord } from '@/requests/uxrecord'
 import toast from 'react-hot-toast'
-import { CheckCircle } from '@mui/icons-material'
 
 const steps = [
     {
@@ -60,10 +59,9 @@ const steps = [
 ]
 
 export default function RateSequence() {
-    const { name, setName, records, setRecords } = StoredContext()
+    const { name, setName, records, setRecords, push } = StoredContext()
     const [activeStep, setActiveStep] = useState(0)
     const [sliderValue, setSliderValue] = useState(0)
-    const { push } = useRouter()
     const handleSlider = (e, newValue) => {
         setSliderValue(newValue)
     }
@@ -71,7 +69,7 @@ export default function RateSequence() {
         setRecords([...records, { activeStep, sliderValue }])
     }
     const deleteRegister = () => {
-        setRecords(() => records.filter(e => e.activeStep !== activeStep - 1))
+        setRecords([...records.filter(e => e.activeStep !== activeStep - 1)])
     }
     const handleNext = () => {
         setActiveStep(activeStep + 1)
@@ -89,30 +87,19 @@ export default function RateSequence() {
         setName(null)
         push('/')
     }
-    const sendtoapi = async () => {
-        const res = await fetch('/api/', {
-            method: 'POST',
-            body: JSON.stringify({
-                name,
-                records
-            })
-        })
-        const data = await res.json()
-        return data
-    }
     const handleSave = async () => {
-        toast.promise(sendtoapi(), {
+        toast.promise(saveRecord({ name, records }), {
             loading: 'guardando',
             success: (data) => data.err ? 'Error al guardar' : 'Guardado!',
             error: (data) => `${data.msj}`
         }, {
             position: 'top-right'
         })
+        push('/')
     }
     const stepslen = steps.length
     return (
         <Box sx={{
-            my: 10,
             display: 'flex',
             alignItems: 'center',
         }}>
@@ -124,12 +111,12 @@ export default function RateSequence() {
 
             {activeStep === steps.length - 1 && (
                 <Box>
-                    <RateResults name={name} results={records} />
+                    <RateResults results={[{ name, records }]} />
                     <Paper square elevation={0} sx={{ p: 3 }}>
-                        <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+                        <Button color='secondary' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
                             Evaluar otro sitio
                         </Button>
-                        <Button variant='contained' onClick={handleSave} sx={{ mt: 1, mr: 1 }}>
+                        <Button variant='contained' color='success' onClick={handleSave} sx={{ mt: 1, mr: 1 }}>
                             Guardar resultados
                         </Button>
                     </Paper>
