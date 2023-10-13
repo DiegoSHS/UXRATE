@@ -1,4 +1,5 @@
 import { StoredContext } from "@/context/context"
+import { Delete } from "@mui/icons-material"
 import { Box, Chip, Divider, Grid, LinearProgress, Stack, Typography } from "@mui/material"
 
 const recomendations = {
@@ -8,8 +9,12 @@ const recomendations = {
     'Pésima': 'El sitio web no aplica o ignora la mayoría o todos los lineamientos de UI / UX, se recomienda hacer una refactorización estética completa del sitio y trabajar ampliamente en la usabilidad, es recomendable empezar a consultar con los usuarios para conocer sus necesidades'
 }
 
-export const RateResults = ({ name, results }) => {
-    console.log(name,results)
+export const RateResults = ({ name, results, id }) => {
+    const { setOpenDialog, setSelectedItem } = StoredContext()
+    const handleDelete = (e) => {
+        setSelectedItem(id)
+        setOpenDialog(true)
+    }
     const sum = results.map(e => e.sliderValue).reduce((p, n) => p + n, 0)
     const avg = (sum / results.length)
 
@@ -26,10 +31,9 @@ export const RateResults = ({ name, results }) => {
                 avg <= 3 ? 'Pésima' :
                     avg <= 5 ? 'Mala' :
                         'No aplica'
-    console.log(sum, avg || 0)
     return (
         <Box>
-            <Box sx={{ my: 3, mx: 2 }}>
+            <Box sx={{ my: 3, mx: 2 }} >
                 <Grid container alignItems="center">
                     <Grid item xs>
                         <Typography gutterBottom variant="h4" component="div">
@@ -66,6 +70,11 @@ export const RateResults = ({ name, results }) => {
                         recomendations[type]
                     }
                 </Typography>
+                {
+                    id && (
+                        <Chip key={id} label="Eliminar" active deleteIcon={<Delete />} clickable onClick={handleDelete} onDelete={handleDelete} variant="outlined" color="error" />
+                    )
+                }
             </Box>
         </Box>
     )
