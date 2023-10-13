@@ -1,16 +1,14 @@
 import { RateResults } from "@/components/resume"
 import { StoredContext } from "@/context/context"
 import { connex } from "@/models/database"
+import { getRecords } from "@/models/transactions"
 import { deleteRecord } from "@/requests/uxrecord"
 import { Box, Button, Dialog, Toolbar, Typography } from "@mui/material"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import toast from "react-hot-toast"
 
 export default function Records({ data }) {
     const [results, setResults] = useState(JSON.parse(data))
-    const { push } = useRouter()
-    useEffect(() => { if (!results.lenght) { push('/') } }, [results])
     const { openDialog, setOpenDialog, selectedItem } = StoredContext()
     const handleClose = () => {
         setOpenDialog(false)
@@ -27,9 +25,7 @@ export default function Records({ data }) {
         setOpenDialog(false)
     }
     return (
-        <Box sx={{
-            my: 10
-        }}>
+        <Box>
             <Dialog open={openDialog}>
                 <Typography sx={{ m: 1 }}>
                     ¿Seguro de que quiere eliminar este elemento?
@@ -39,14 +35,14 @@ export default function Records({ data }) {
                     <Button fullWidth onClick={handleClose}>Cancelar</Button>
                 </Toolbar>
             </Dialog>
-            {results.map((e) => RateResults({ name: e.name, results: e.records, id: e._id }))}
+            <RateResults results={results} />
         </Box>
     )
 }
 
 export const getStaticProps = async () => {
     const collection = connex()
-    const res = await collection.find({}).toArray()
+    const res = await getRecords(collection)
     return {
         props: {
             data: JSON.stringify(res)
