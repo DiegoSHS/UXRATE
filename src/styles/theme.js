@@ -1,12 +1,12 @@
 import { TopBarScroll } from '@/components/topBar'
 import { Context } from '@/context/context'
-import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { Container, CssBaseline, ThemeProvider, colors, createTheme } from '@mui/material'
 import { CookiesProvider, useCookies } from 'react-cookie'
 import { Toaster } from 'react-hot-toast'
 
 const defaultTheme = createTheme()
 const darkTheme = createTheme({
-    palette: { mode: 'dark' }
+    palette: { mode: 'dark',background:{default:'5c5c5c'} },
 })
 
 export default function Layout({ children }) {

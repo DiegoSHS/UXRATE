@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     switch (method) {
       case 'GET':
         const records = await getRecords(collection)
-        return res.status(200).json(records)
+        return res.status(200).json(records.reverse())
       case 'POST':
         const ress = await createRecord(collection, reqbody)
         return res.status(201).json({ msj: `inserted document`, insertedId: ress.insertedId })
