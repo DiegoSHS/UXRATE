@@ -8,6 +8,7 @@ const defaultTheme = createTheme()
 const darkTheme = createTheme({
     palette: { mode: 'dark' }
 })
+const themes = { darkTheme, defaultTheme }
 
 export default function Layout({ children }) {
     const themes = [darkTheme, defaultTheme]
