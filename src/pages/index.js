@@ -3,14 +3,14 @@ import { StarHalf, Style } from '@mui/icons-material'
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
 
 export default function VerticalLinearStepper() {
-  const { name, setName, setVisible, push } = StoredContext()
+  const { interacts: { name }, setInteract, push } = StoredContext()
   const handleChange = (e) => {
-    setName(e.target.value)
+    setInteract({ name: e.target.value })
   }
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!name || name == '') return
-    setVisible(false)
+    setInteract({ visible: false })
     push('/advice')
   }
   return (

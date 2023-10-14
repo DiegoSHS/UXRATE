@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     try {
         const { body, method, query: { id } } = req
         const collection = connex()
-        const reqbody = JSON.parse(body)
+        const reqbody = body ? JSON.parse(body) : null
         switch (method) {
             case 'GET':
                 const record = await getRecord(collection, id)
