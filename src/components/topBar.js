@@ -35,7 +35,7 @@ export const TopBarScroll = (props) => {
                     <Toolbar >
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/records')} endIcon={<ViewModule />}>Registros</Button>
-                        <IconButton aria-label="add an alarm" onClick={setTheme}>
+                        <IconButton color="primary" aria-label="add an alarm" onClick={setTheme}>
                             <LightMode />
                         </IconButton>
                     </Toolbar>

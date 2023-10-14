@@ -23,7 +23,7 @@ Chart.register(
 
 export const RateResult = ({ name, records, _id }) => {
     const sliderValues = records.map(e => e.sliderValue)
-    const { setInteract, interacts } = StoredContext()
+    const { setInteract } = StoredContext()
     const handleDelete = (e) => {
         setInteract({ selected: _id })
         setInteract({ openDialog: true })
