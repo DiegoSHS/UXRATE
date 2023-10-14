@@ -63,13 +63,13 @@ export default function RateSequence() {
             display: 'flex',
             alignItems: 'center',
         }}>
-            {!(activeStep === steps.length - 1) && (
+            {!(activeStep === steps.length) && (
                 <Stepper activeStep={activeStep} orientation="vertical">
                     {steps.map((step, index) => RateStep({ step, index, stepslen, sliderValue, handleBack, handleNext, handleSlider }))}
                 </Stepper>
             )}
 
-            {activeStep === steps.length - 1 && (
+            {activeStep === steps.length && (
                 <Box>
                     <RateResults results={[{ name: name, records }]} />
                     <Paper square elevation={0} sx={{ p: 3 }}>
