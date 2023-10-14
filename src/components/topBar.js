@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie"
 function HideOnScroll({ children }) {
     const trigger = useScrollTrigger()
     return (
-        <Slide appear={false} direction="down" in={!trigger}>
+        <Slide appear={false} direction="down" in={!trigger} color="inherit">
             {children}
         </Slide>
     )
@@ -30,9 +30,9 @@ export const TopBarScroll = (props) => {
     }
     return (
         <HideOnScroll {...props}>
-            <AppBar color="inherit">
+            <AppBar >
                 <Container maxWidth='sm'>
-                    <Toolbar>
+                    <Toolbar >
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/records')} endIcon={<ViewModule />}>Registros</Button>
                         <IconButton aria-label="add an alarm" onClick={setTheme}>
