@@ -1,6 +1,7 @@
 import { StoredContext } from "@/context/context"
-import { Home, ViewModule } from "@mui/icons-material"
-import { AppBar, Button, Container, Slide, Toolbar, useScrollTrigger } from "@mui/material"
+import { Home, LightMode, ViewModule } from "@mui/icons-material"
+import { AppBar, Button, Container, IconButton, Slide, Toolbar, useScrollTrigger } from "@mui/material"
+import { useCookies } from "react-cookie"
 
 function HideOnScroll({ children }) {
     const trigger = useScrollTrigger()
@@ -13,7 +14,23 @@ function HideOnScroll({ children }) {
 
 export const TopBarScroll = (props) => {
     const { push } = StoredContext()
-
+    const [cookies, setCookie] = useCookies()
+    const setTheme = () => {
+        const expires = new Date(Date.now())
+        expires.setFullYear(2025)
+        console.log(expires)
+        if (cookies.theme) {
+            setCookie('theme', 0, {
+                expires: expires, path: '/'
+            })
+            console.log('dark')
+            return
+        }
+        setCookie('theme', 1, {
+            expires: expires, path: '/'
+        })
+        console.log('default')
+    }
     return (
         <HideOnScroll {...props}>
             <AppBar color="default">
@@ -21,6 +38,9 @@ export const TopBarScroll = (props) => {
                     <Toolbar>
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/records')} endIcon={<ViewModule />}>Registros</Button>
+                        <IconButton aria-label="add an alarm" onClick={setTheme}>
+                            <LightMode />
+                        </IconButton>
                     </Toolbar>
                 </Container>
             </AppBar>
