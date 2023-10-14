@@ -59,7 +59,7 @@ const steps = [
 ]
 
 export default function RateSequence() {
-    const { name, setName, records, setRecords, push } = StoredContext()
+    const { interacts: { name, results }, setInteract, records, setRecords, push } = StoredContext()
     const [activeStep, setActiveStep] = useState(0)
     const [sliderValue, setSliderValue] = useState(0)
     const handleSlider = (e, newValue) => {
@@ -84,19 +84,22 @@ export default function RateSequence() {
     const handleReset = () => {
         setActiveStep(0)
         setRecords([])
-        setName(null)
+        setInteract({ name: null })
         push('/')
     }
 
     const handleSave = async () => {
         toast.promise(saveRecord({ name, records }), {
             loading: 'guardando',
-            success: (data) => data.err ? 'Error al guardar' : 'Guardado!',
+            success: (data) => {
+                setInteract({ results: [...results, { _id: data.insertedId, name, records }] })
+                return data.err ? 'Error al guardar' : 'Guardado!'
+            },
             error: (data) => `${data.msj}`
         }, {
             position: 'top-right'
         })
-        push('/')
+        push('/records')
     }
     const stepslen = steps.length
     return (
@@ -112,7 +115,7 @@ export default function RateSequence() {
 
             {activeStep === steps.length - 1 && (
                 <Box>
-                    <RateResults results={[{ name, records }]} />
+                    <RateResults results={[{ name: name, records }]} />
                     <Paper square elevation={0} sx={{ p: 3 }}>
                         <Button color='secondary' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
                             Evaluar otro sitio
