@@ -87,6 +87,7 @@ export default function RateSequence() {
         setName(null)
         push('/')
     }
+
     const handleSave = async () => {
         toast.promise(saveRecord({ name, records }), {
             loading: 'guardando',
