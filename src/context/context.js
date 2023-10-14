@@ -1,25 +1,40 @@
+import { retrieveRecords } from "@/requests/uxrecord";
 import { useRouter } from "next/router";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export const Data = createContext()
 
 export const StoredContext = () => useContext(Data)
 
-export const Context = ({ children }) => {
+export const Context = (props) => {
+    const { children } = props
     const { push } = useRouter()
-    const [name, setName] = useState(null),
-        [visible, setVisible] = useState(true),
-        [selectedItem, setSelectedItem] = useState(null),
-        [openDialog, setOpenDialog] = useState(false),
-        [records, setRecords] = useState([]),
-        ctx = {
-            push,
-            name, setName,
-            visible, setVisible,
-            records, setRecords,
-            openDialog, setOpenDialog,
-            selectedItem, setSelectedItem
+    const [records, setRecords] = useState([])
+    const [interacts, setInteracts] = useState({
+        visible: true,
+        loading: false,
+        openDialog: false,
+        selected: null,
+        name: null,
+        results: []
+    })
+    const setInteract = (proper) => { setInteracts((prev) => ({ ...prev, ...proper })) }
+    useEffect(() => {
+        const gets = async () => {
+            setInteract({ loading: true })
+            const results = await retrieveRecords()
+            setInteract({ results: results })
+            setInteract({ loading: false })
+            console.log(interacts)
         }
+        gets()
+    }, [])
+    const ctx = {
+        push,
+        interacts,
+        setInteract,
+        records, setRecords
+    }
     return (
         <Data.Provider value={ctx}>
             {children}

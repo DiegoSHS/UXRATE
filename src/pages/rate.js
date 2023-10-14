@@ -3,7 +3,7 @@ import { StoredContext } from "@/context/context"
 import { useEffect } from "react"
 
 export default function Rate() {
-    const { visible, push } = StoredContext()
+    const { interacts: { visible }, push } = StoredContext()
     useEffect(() => {
         if (visible) {
             push('/')

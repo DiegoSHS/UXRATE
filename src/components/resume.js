@@ -1,6 +1,6 @@
 import { StoredContext } from "@/context/context"
 import { Add, Delete } from "@mui/icons-material"
-import { Box, Chip, Container, Divider, Fab, Grid, LinearProgress, Stack, Typography } from "@mui/material"
+import { Box, Chip, CircularProgress, Container, Divider, Fab, Grid, LinearProgress, Skeleton, Stack, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 
 const recomendations = {
@@ -11,10 +11,11 @@ const recomendations = {
 }
 
 export const RateResult = ({ name, records, _id }) => {
-    const { setOpenDialog, setSelectedItem } = StoredContext()
+    const { setInteract, interacts: { selected } } = StoredContext()
     const handleDelete = (e) => {
-        setSelectedItem(_id)
-        setOpenDialog(true)
+        setInteract({ selected: _id })
+        setInteract({ openDialog: true })
+        console.log(_id, selected)
     }
     const sum = records.map(e => e.sliderValue).reduce((p, n) => p + n, 0)
     const avg = (sum / records.length)
@@ -82,7 +83,7 @@ export const RateResult = ({ name, records, _id }) => {
 }
 
 export const RateResults = ({ results }) => {
-    const { push } = StoredContext()
+    const { push, interacts: { loading } } = StoredContext()
     if (results.length === 0) {
         return (
             <Grid sx={{
@@ -91,11 +92,14 @@ export const RateResults = ({ results }) => {
                 alignItems: 'center',
                 flexDirection: 'column'
             }}>
-                <Typography align="center">Aún no hay nada registrado</Typography>
-                <Fab sx={{ m: 2 }} color="primary" onClick={() => { push('/') }} aria-label="Añadir nuevo">
-                    <Add />
-                </Fab>
-            </Grid>
+                <Typography align="center">{loading ? 'Cargando...' : 'Aún no hay nada registrado'}</Typography>
+                {loading ?
+                    (<CircularProgress sx={{ m: 2 }} />) :
+                    (<Fab sx={{ m: 2 }} color="primary" onClick={() => { push('/') }} aria-label="Añadir nuevo">
+                        <Add />
+                    </Fab>)
+                }
+            </Grid >
         )
     }
     return results.map(RateResult)

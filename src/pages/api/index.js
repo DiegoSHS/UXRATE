@@ -5,14 +5,14 @@ export default async function handler(req, res) {
   try {
     const { body, method } = req
     const collection = connex()
-    const reqbody = JSON.parse(body)
+    const reqbody = body ? JSON.parse(body) : null
     switch (method) {
       case 'GET':
         const records = await getRecords(collection)
         return res.status(200).json(records)
       case 'POST':
         const ress = await createRecord(collection, reqbody)
-        return res.status(201).json({ msj: `inserted document:${ress.insertedId}` })
+        return res.status(201).json({ msj: `inserted document`, insertedId: ress.insertedId })
       default:
         return res.status(405).json({ msj: 'method not supported' })
     }
