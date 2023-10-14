@@ -12,7 +12,7 @@ const darkTheme = createTheme({
 export default function Layout({ children }) {
     const themes = [darkTheme, defaultTheme]
     const [cookies] = useCookies(['theme'])
-    const theme = cookies.theme ? 0 : 1
+    const theme = cookies.theme ? 1 : 0
     return (
         <Context>
             <CookiesProvider>
