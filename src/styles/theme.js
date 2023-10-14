@@ -27,6 +27,5 @@ export default function Layout({ children }) {
                 </ThemeProvider>
             </CookiesProvider>
         </Context>
-
     )
 }
