@@ -18,22 +18,19 @@ export const TopBarScroll = (props) => {
     const setTheme = () => {
         const expires = new Date(Date.now())
         expires.setFullYear(2025)
-        console.log(expires)
         if (cookies.theme) {
             setCookie('theme', 0, {
                 expires: expires, path: '/'
             })
-            console.log('dark')
             return
         }
         setCookie('theme', 1, {
             expires: expires, path: '/'
         })
-        console.log('default')
     }
     return (
         <HideOnScroll {...props}>
-            <AppBar color="default">
+            <AppBar color="inherit">
                 <Container maxWidth='sm'>
                     <Toolbar>
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>
