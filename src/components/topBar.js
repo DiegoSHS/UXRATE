@@ -30,7 +30,7 @@ export const TopBarScroll = (props) => {
     }
     return (
         <HideOnScroll {...props}>
-            <AppBar >
+            <AppBar sx={{backgroundColor:'transparent', backdropFilter:'blur(10px)'}}>
                 <Container maxWidth='sm'>
                     <Toolbar >
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>

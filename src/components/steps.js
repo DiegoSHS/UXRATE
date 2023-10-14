@@ -25,7 +25,7 @@ export const RateStep = ({ step, index, stepslen, sliderValue, handleBack, handl
                         valueLabelDisplay='auto'
                         step={1}
                         size='small'
-                        min={1}
+                        min={0}
                         max={10}
                     />
                 </Box>
