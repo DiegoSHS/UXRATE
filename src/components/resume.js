@@ -11,6 +11,15 @@ const recomendations = {
     'Pésima': 'El sitio web no aplica o ignora la mayoría o todos los lineamientos de UI / UX, se recomienda hacer una refactorización estética completa del sitio y trabajar ampliamente en la usabilidad, es recomendable empezar a consultar con los usuarios para conocer sus necesidades'
 }
 
+Chart.register(
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Tooltip,
+    Legend,
+    Filler
+)
+
 export const RateResult = ({ name, records, _id }) => {
     const sliderValues = records.map(e => e.sliderValue)
     const { setInteract } = StoredContext()
@@ -22,7 +31,7 @@ export const RateResult = ({ name, records, _id }) => {
     const avg = (sum / records.length)
     const { chartColor, labelcolor, type } = chartProps(avg)
     const avgString = String(avg).substring(0, 4)
-
+    
     return (
         <Box>
             <Box sx={{ my: 3, mx: 2 }} >
