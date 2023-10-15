@@ -1,9 +1,8 @@
 import { StoredContext } from "@/context/context"
 import { Add, Delete } from "@mui/icons-material"
-import { Box, Chip, CircularProgress, Fab, Grid, LinearProgress, Stack, Typography, colors } from "@mui/material"
-import { Radar } from "react-chartjs-2"
-import { Chart, Filler, Legend, LineElement, PointElement, RadialLinearScale, Tooltip } from "chart.js"
+import { Box, Chip, CircularProgress, Fab, Grid, LinearProgress, Stack, Typography } from "@mui/material"
 import { labels } from "@/utils/steps"
+import { RateChart, chartProps } from "./decachart"
 
 const recomendations = {
     'Ideal': 'En general no hay recomendaciones muy significantes, el sitio web funciona de forma que los usuarios se sienten gratificados con su navegación en este',
@@ -11,15 +10,6 @@ const recomendations = {
     'Mala': 'Se requiere de mejorar ampliamente la usabilidad del sitio web, mejorar la interfaz para hacerla más limpia y es ideal empezar a seguir pautas de diseño como Material UI o algún estándar en específico',
     'Pésima': 'El sitio web no aplica o ignora la mayoría o todos los lineamientos de UI / UX, se recomienda hacer una refactorización estética completa del sitio y trabajar ampliamente en la usabilidad, es recomendable empezar a consultar con los usuarios para conocer sus necesidades'
 }
-
-Chart.register(
-    RadialLinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-    Legend,
-    Filler
-)
 
 export const RateResult = ({ name, records, _id }) => {
     const sliderValues = records.map(e => e.sliderValue)
@@ -30,35 +20,9 @@ export const RateResult = ({ name, records, _id }) => {
     }
     const sum = sliderValues.reduce((p, n) => p + n, 0)
     const avg = (sum / records.length)
-    const chartColor =
-        avg > 7 ? colors.lightGreen[500] :
-            avg > 5 ? colors.purple[500] :
-                avg <= 3 ? colors.red[500] :
-                    avg <= 5 ? colors.deepOrange[500] :
-                        colors.lightBlue[500]
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Valor obtenido',
-            data: sliderValues,
-            backgroundColor: chartColor + '20',
-            borderColor: chartColor,
-            borderWidth: 1
-        }]
-    }
+    const { chartColor, labelcolor, type } = chartProps(avg)
     const avgString = String(avg).substring(0, 4)
-    const labelcolor =
-        avg > 7 ? 'success' :
-            avg > 5 ? 'secondary' :
-                avg <= 3 ? 'error' :
-                    avg <= 5 ? 'warning' :
-                        'primary'
-    const type =
-        avg > 7 ? 'Ideal' :
-            avg > 5 ? 'Media' :
-                avg <= 3 ? 'Pésima' :
-                    avg <= 5 ? 'Mala' :
-                        'No aplica'
+
     return (
         <Box>
             <Box sx={{ my: 3, mx: 2 }} >
@@ -91,12 +55,7 @@ export const RateResult = ({ name, records, _id }) => {
                 </Stack>
             </Box>
             <Box sx={{ m: 2 }}>
-                <Box sx={{
-                    my: 2, borderRadius: 2,
-                    backgroundColor: colors.blueGrey[50],
-                }}>
-                    <Radar data={data} />
-                </Box>
+                <RateChart labels={labels} values={sliderValues} chartColor={chartColor} />
                 <Typography gutterBottom textAlign='justify' color='GrayText' variant="body2">
                     {
                         recomendations[type]
