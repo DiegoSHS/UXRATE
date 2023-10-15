@@ -25,7 +25,6 @@ export const Context = (props) => {
             const results = await retrieveRecords()
             setInteract({ results: results })
             setInteract({ loading: false })
-            console.log(interacts)
         }
         gets()
     }, [])
