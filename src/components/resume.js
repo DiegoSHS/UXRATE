@@ -102,8 +102,8 @@ export const RateResult = ({ name, records, _id, site, tests }) => {
                         <LinearProgress sx={{ my: 1, borderRadius: 2 }} variant="determinate" color="inherit" value={testsRate} />
                         {tests.map((e, i) => {
                             return (
-                                <Box>
-                                    <Chip key={i} label={e.name == 'Recomendaciones' ? `Buenas prácticas: ${e.score}` : `${e.name}: ${e.score}`} active variant="filled" />
+                                <Box key={i}>
+                                    <Chip label={e.name == 'Recomendaciones' ? `Buenas prácticas: ${e.score}` : `${e.name}: ${e.score}`} active variant="filled" />
                                     <Typography gutterBottom textAlign='justify' color='GrayText' variant="body2">
                                         Fecha de análisis: {e.details.analysisTimestamp}
                                     </Typography>
