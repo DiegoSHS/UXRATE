@@ -12,9 +12,10 @@ export default function Records() {
     const handleDelete = () => {
         toast.promise(deleteRecord(selected), {
             loading: 'Eliminando',
-            success: (data) => data.err ? 'Eliminado de forma correcta' : 'No eliminado',
-            error: (data) => `${data.msj}`,
+            success: (data) => data.error ? 'Eliminado de forma correcta' : 'No eliminado',
+            error: (data) => `${data.message}`,
         }, {
+            success: { icon: false },
             position: 'top-right'
         })
         setInteract({ results: [...results.filter(e => e._id !== selected)] })
