@@ -1,8 +1,10 @@
 import { StoredContext } from "@/context/context"
-import { Add, Delete } from "@mui/icons-material"
-import { Box, Chip, CircularProgress, Fab, Grid, LinearProgress, Stack, Typography } from "@mui/material"
+import { Add, Delete, ExpandMore, Favorite, MoreVert, Share } from "@mui/icons-material"
+import { Avatar, Box, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, CircularProgress, Collapse, Fab, Grid, IconButton, LinearProgress, Stack, Typography } from "@mui/material"
 import { labels } from "@/utils/steps"
 import { RateChart, chartProps } from "./decachart"
+import { useState } from "react"
+import styled from "@emotion/styled"
 
 const recomendations = {
     'Ideal': 'En general no hay recomendaciones muy significantes, el sitio web funciona de forma que los usuarios se sienten gratificados con su navegación en este',
@@ -11,8 +13,24 @@ const recomendations = {
     'Pésima': 'El sitio web no aplica o ignora la mayoría o todos los lineamientos de UI / UX, se recomienda hacer una refactorización estética completa del sitio y trabajar ampliamente en la usabilidad, es recomendable empezar a consultar con los usuarios para conocer sus necesidades'
 }
 
-export const RateResult = ({ name, records, _id }) => {
+const Expandible = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
+}));
+
+export const RateResult = ({ name, records, _id, site, tests }) => {
     const sliderValues = records.map(e => e.sliderValue)
+    const testsRate = tests ? (tests.map(e => e.score).reduce((p, n) => p + n, 0) / 3).toString().substring(0, 3) : false
+    const [expanded, setExpanded] = useState(false)
+    const handleExpanded = () => {
+        setExpanded(!expanded)
+    }
     const { setInteract } = StoredContext()
     const handleDelete = (e) => {
         setInteract({ selected: _id })
@@ -22,52 +40,96 @@ export const RateResult = ({ name, records, _id }) => {
     const avg = (sum / records.length)
     const { chartColor, labelcolor, type } = chartProps(avg)
     const avgString = String(avg).substring(0, 4)
-
+    const { interacts: { user } } = StoredContext()
+    
     return (
-        <Box>
-            <Box sx={{ my: 3, mx: 2 }} >
-                <Grid container alignItems="center">
-                    <Grid item xs>
-                        <Typography gutterBottom variant="h4" component="div">
-                            Resultados: {name}
-                        </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography gutterBottom variant="h6" component="div">
-                            Promedio de experiencia: {avgString} / 10
-                        </Typography>
-                    </Grid>
-                </Grid>
-                <Typography color="text.secondary" variant="body2">
-                    El sitio web ha sido calificado.
-                    <LinearProgress sx={{ my: 1, borderRadius: 2 }} variant="determinate" color={labelcolor} value={avg * 10} />
-                </Typography>
-            </Box>
-            <Box sx={{ m: 2 }}>
-                <Typography gutterBottom color='GrayText' variant="body2">
-                    La experiencia del usuario en el sitio web ha sido calificada como:
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                    <Chip label="Ideal" color={type === 'Ideal' ? 'success' : 'default'} />
-                    <Chip label="Media" color={type === 'Media' ? 'secondary' : 'default'} />
-                    <Chip label="Mala" color={type === 'Mala' ? 'warning' : 'default'} />
-                    <Chip label="Pésima" color={type === 'Pésima' ? 'error' : 'default'} />
-                </Stack>
-            </Box>
-            <Box sx={{ m: 2 }}>
-                <RateChart labels={labels} values={sliderValues} chartColor={chartColor} />
-                <Typography gutterBottom textAlign='justify' color='GrayText' variant="body2">
-                    {
-                        recomendations[type]
-                    }
-                </Typography>
-                {
-                    _id && (
-                        <Chip key={_id} label="Eliminar" active deleteIcon={<Delete />} clickable onClick={handleDelete} onDelete={handleDelete} variant="outlined" color="error" />
-                    )
+        <Card sx={{ my: 1 }}>
+            <CardHeader
+                avatar={
+                    <Avatar src={user.image} aria-label="analysis" />
                 }
-            </Box>
-        </Box >
+                action={
+                    <IconButton aria-label="settings">
+                        <MoreVert />
+                    </IconButton>
+                }
+                title={`Análisis: ${name}`}
+                subheader={site}
+            />
+            <CardContent>
+                <Typography gutterBottom variant="h6" component="div">
+                    Calificación personal: {avgString} / 10
+                </Typography>
+                <LinearProgress sx={{ my: 1, borderRadius: 2 }} variant="determinate" color={labelcolor} value={avg * 10} />
+                <Box>
+                    <Typography gutterBottom textAlign='justify' color='GrayText' variant="body2">
+                        {
+                            recomendations[type]
+                        }
+                    </Typography>
+                    <Typography gutterBottom color='GrayText' variant="body2">
+                        La experiencia del usuario en el sitio web ha sido calificada como:
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                        <Chip label="Ideal" color={type === 'Ideal' ? 'success' : 'default'} />
+                        <Chip label="Media" color={type === 'Media' ? 'secondary' : 'default'} />
+                        <Chip label="Mala" color={type === 'Mala' ? 'warning' : 'default'} />
+                        <Chip label="Pésima" color={type === 'Pésima' ? 'error' : 'default'} />
+                    </Stack>
+                </Box>
+                <RateChart labels={labels} values={sliderValues} chartColor={chartColor} />
+            </CardContent>
+            <CardActions disableSpacing>
+                {_id && (
+                    <Chip key={_id} label="Eliminar" active deleteIcon={<Delete />} clickable onClick={handleDelete} onDelete={handleDelete} variant="outlined" color="error" />
+                )}
+                {tests && (
+                    <Expandible
+                        expand={expanded}
+                        onClick={handleExpanded}
+                        aria-expanded={expanded}
+                        aria-label="show more"
+                    >
+                        <ExpandMore />
+                    </Expandible>
+                )}
+            </CardActions>
+            {tests && (
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <CardContent>
+                        <Typography gutterBottom variant="h6" component="div">
+                            Calificación de tests automatizados: {testsRate} / 10
+                        </Typography>
+                        <LinearProgress sx={{ my: 1, borderRadius: 2 }} variant="determinate" color="inherit" value={testsRate} />
+                        {tests.map((e, i) => {
+                            return (
+                                <Box key={i}>
+                                    <Chip label={e.name == 'Recomendaciones' ? `Buenas prácticas: ${e.score}` : `${e.name}: ${e.score}`} active variant="filled" />
+                                    <Typography gutterBottom textAlign='justify' color='GrayText' variant="body2">
+                                        Fecha de análisis: {e.details.analysisTimestamp}
+                                    </Typography>
+                                    <Typography gutterBottom textAlign='justify' color='GrayText' variant="body2">
+                                        Entorno de pruebas: {e.details.environment.hostUserAgent}
+                                    </Typography>
+                                    <Typography gutterBottom textAlign='justify' color='GrayText' variant="body2">
+                                        Benchmark: {e.details.environment.benchmarkIndex}
+                                    </Typography>
+                                </Box>
+                            )
+                        })}
+                        <Typography gutterBottom variant="h6" component="div">
+                            Captura de pantalla:
+                        </Typography>
+                        <CardMedia
+                            sx={{ borderRadius: 2 }}
+                            component="img"
+                            image={tests[0].details.screenShot}
+                            alt="Captura de pantalla"
+                        />
+                    </CardContent>
+                </Collapse>
+            )}
+        </Card>
     )
 }
 

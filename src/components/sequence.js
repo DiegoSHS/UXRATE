@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Stepper } from '@mui/material'
+import { Box, Button, Paper, Stepper, Typography } from '@mui/material'
 import { useState } from 'react'
 import { RateResults } from './resume'
 import { RateStep } from './steps'
@@ -6,11 +6,13 @@ import { StoredContext } from '@/context/context'
 import { saveRecord } from '@/requests/uxrecord'
 import toast from 'react-hot-toast'
 import { steps } from '@/utils/steps'
+import { signIn } from 'next-auth/react'
 
 export default function RateSequence() {
-    const { interacts: { name, results }, setInteract, records, setRecords, push } = StoredContext()
+    const { interacts: { name, results, user, site }, setInteract, records, setRecords, push } = StoredContext()
     const [activeStep, setActiveStep] = useState(0)
     const [sliderValue, setSliderValue] = useState(0)
+    const [error, setError] = useState(null)
     const handleSlider = (e, newValue) => {
         setSliderValue(newValue)
         handleRegister()
@@ -45,17 +47,27 @@ export default function RateSequence() {
     }
 
     const handleSave = async () => {
-        toast.promise(saveRecord({ name, records }), {
+        if (!user.name) {
+            signIn()
+            return
+        }
+        toast.promise(saveRecord({ name, records, email: user.email, site }), {
             loading: 'guardando',
             success: (data) => {
+                if (data.error) {
+                    console.log(data.error)
+                    setError(error)
+                    return 'Error al guardar'
+                }
                 setInteract({ results: [...results, { _id: data.insertedId, name, records }] })
-                return data.err ? 'Error al guardar' : 'Guardado!'
+                push('/records')
+                return 'Guardado!'
             },
             error: (data) => `${data.msj}`
         }, {
+            success: { icon: false },
             position: 'top-right'
         })
-        push('/records')
     }
     const stepslen = steps.length
     return (
@@ -63,13 +75,12 @@ export default function RateSequence() {
             display: 'flex',
             alignItems: 'center',
         }}>
-            {!(activeStep === steps.length) && (
+            {!(activeStep === stepslen) && (
                 <Stepper activeStep={activeStep} orientation="vertical">
                     {steps.map((step, index) => RateStep({ step, index, stepslen, sliderValue, handleBack, handleNext, handleSlider }))}
                 </Stepper>
             )}
-
-            {activeStep === steps.length && (
+            {activeStep === stepslen && (
                 <Box>
                     <RateResults results={[{ name: name, records }]} />
                     <Paper square elevation={0} sx={{ p: 3 }}>
@@ -77,8 +88,13 @@ export default function RateSequence() {
                             Evaluar otro sitio
                         </Button>
                         <Button variant='contained' color='success' onClick={handleSave} sx={{ mt: 1, mr: 1 }}>
-                            Guardar resultados
+                            {user.name ? 'Guardar resultados' : 'Iniciar sesión para guardar'}
                         </Button>
+                        {error ? (
+                            <Typography variant='caption' color='error'>
+                                Error: {error.message}
+                            </Typography>
+                        ) : ('')}
                     </Paper>
                 </Box>
             )}
