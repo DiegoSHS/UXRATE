@@ -1,4 +1,5 @@
 import { retrieveRecords } from "@/requests/uxrecord";
+import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -11,22 +12,36 @@ export const Context = (props) => {
     const { push } = useRouter()
     const [records, setRecords] = useState([])
     const [interacts, setInteracts] = useState({
+        user: {},
         visible: true,
         loading: false,
         openDialog: false,
         selected: null,
         name: null,
+        site: null,
         results: []
     })
     const setInteract = (proper) => { setInteracts((prev) => ({ ...prev, ...proper })) }
-    useEffect(() => {
-        const gets = async () => {
-            setInteract({ loading: true })
-            const results = await retrieveRecords()
-            setInteract({ results: results })
-            setInteract({ loading: false })
+    const dataInit = async () => {
+        setInteract({ loading: true })
+        const results = await retrieveRecords()
+        setInteract({ results: results })
+        setInteract({ loading: false })
+    }
+    const sesionInit = async () => {
+        const session = window.location.hostname === 'localhost' ? {
+            user: {
+                name: 'Jhon Doe',
+                email: 'something@example.com',
+                image: 'https://lh3.googleusercontent.com/a/AAcHTteDid88LgJbjhFjiv9paLPNOnM1pBOasbz0DKgHdZpMD3o=s96-c'
+            }
         }
-        gets()
+            : await getSession()
+        setInteract({ user: session.user })
+    }
+    useEffect(() => {
+        sesionInit()
+        dataInit()
     }, [])
     const ctx = {
         push,

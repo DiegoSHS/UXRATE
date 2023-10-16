@@ -18,9 +18,9 @@ export default async function handler(req, res) {
                 const ress = await updateRecord(collection, id, reqbody)
                 return res.status(201).json({ msj: `updated document:${ress}` })
             default:
-                return res.status(405).json({ msj: 'method not supported', err: 1 })
+                return res.status(405).json({ error: { code: 400, message: 'method not suported' } })
         }
     } catch (error) {
-        return res.status(500).json({ msj: `something gone wrong: ${error.message}`, err: 1 })
+        return res.status(500).json({ error: { code: 500, message: error.message } })
     }
 }

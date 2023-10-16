@@ -1,15 +1,20 @@
 import { StoredContext } from '@/context/context'
+import { urlValidator } from '@/utils/validate'
 import { StarHalf, Style } from '@mui/icons-material'
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
 
 export default function VerticalLinearStepper() {
-  const { interacts: { name }, setInteract, push } = StoredContext()
+  const { interacts: { name, site }, setInteract, push } = StoredContext()
+  const [error, setError] = useState(false)
   const handleChange = (e) => {
-    setInteract({ name: e.target.value })
+    setInteract({ [e.target.name]: e.target.value })
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!name || name == '') return
+    const err = urlValidator(site)
+    setError(err)
+    if ((!name || name == '') || err) return
     setInteract({ visible: false })
     push('/advice')
   }
@@ -34,8 +39,8 @@ export default function VerticalLinearStepper() {
       <Typography component="h1" variant="h5">
         Califica tu app
       </Typography>
-      <Typography variant="body2">
-        Obten una calificación de tu app con base en 12 leyes de UX
+      <Typography variant="body2" textAlign='center'>
+        Obten una calificación de tu app con base en 12 leyes de UX y Tests automatizados
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
@@ -49,6 +54,17 @@ export default function VerticalLinearStepper() {
           name="name"
           autoComplete="name"
           autoFocus
+        />
+        <TextField
+          defaultValue={site}
+          onChange={handleChange}
+          margin="normal"
+          required
+          fullWidth
+          id="site"
+          label="URL de la app web"
+          name="site"
+          error={error}
         />
         <Button
           type="submit"
