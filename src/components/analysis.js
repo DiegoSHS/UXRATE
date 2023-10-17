@@ -5,22 +5,18 @@ import { Box, Button, Dialog, Toolbar, Typography } from "@mui/material"
 import { useEffect } from "react"
 import toast from "react-hot-toast"
 
-export default function Records() {
-    const { interacts: { selected, user, openDialog, results }, setInteract } = StoredContext()
+export default function Records({ records }) {
+    const { interacts: { selected, openDialog, results }, setInteract } = StoredContext()
     const handleClose = () => {
         setInteract({ openDialog: false })
     }
-    const dataInit = async () => {
-        const { email } = user
+    const dataInit = () => {
         setInteract({ loading: true })
-        const results = await filteredRecords(email)
-        console.log(results)
-        setInteract({ results: results })
+        setInteract({ results: records })
         setInteract({ loading: false })
     }
-    useEffect(() => {
-        dataInit()
-    }, [])
+    useEffect(dataInit, [])
+
     const handleDelete = () => {
         toast.promise(deleteRecord(selected), {
             loading: 'Eliminando',
