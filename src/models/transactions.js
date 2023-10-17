@@ -4,7 +4,7 @@ export const deletebyId = async (collection, id) => await collection.deleteOne({
 
 export const createRecord = async (collection, body) => await collection.insertOne(body)
 
-export const getRecords = async (collection) => await collection.find({}).toArray()
+export const getRecords = async (collection, filter = {}) => await collection.find(filter).toArray()
 
 export const getRecord = async (collection, id) => await collection.findOne({_id: new ObjectId(id)})
 

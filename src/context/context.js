@@ -1,4 +1,4 @@
-import { retrieveRecords } from "@/requests/uxrecord";
+import { filteredRecords, retrieveRecords } from "@/requests/uxrecord";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -23,8 +23,10 @@ export const Context = (props) => {
     })
     const setInteract = (proper) => { setInteracts((prev) => ({ ...prev, ...proper })) }
     const dataInit = async () => {
+        const { user: { email } } = interacts
         setInteract({ loading: true })
-        const results = await retrieveRecords()
+        const results = await filteredRecords(email)
+        console.log(results)
         setInteract({ results: results })
         setInteract({ loading: false })
     }
@@ -41,7 +43,9 @@ export const Context = (props) => {
     }
     useEffect(() => {
         sesionInit()
-        dataInit()
+        if (interacts.user.email) {
+            dataInit()
+        }
     }, [])
     const ctx = {
         push,
