@@ -1,6 +1,6 @@
 import { RateResults } from "@/components/resume"
 import { StoredContext } from "@/context/context"
-import { deleteRecord } from "@/requests/uxrecord"
+import { deleteRecord, filteredRecords } from "@/requests/uxrecord"
 import { Box, Button, Dialog, Toolbar, Typography } from "@mui/material"
 import { useEffect } from "react"
 import toast from "react-hot-toast"
@@ -16,6 +16,7 @@ export default function Records({ records }) {
         setInteract({ loading: false })
     }
     useEffect(dataInit, [])
+
     const handleDelete = () => {
         toast.promise(deleteRecord(selected), {
             loading: 'Eliminando',
