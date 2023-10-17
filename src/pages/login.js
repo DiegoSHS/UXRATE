@@ -25,7 +25,10 @@ const Login = () => {
             </Typography>
             <Box>
                 <Button
-                    onClick={signOut}
+                    onClick={()=>{
+                        signOut()
+                        push('/')
+                    }}
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3 }}
