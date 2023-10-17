@@ -100,7 +100,7 @@ export const TopBarScroll = (props) => {
                 <Container maxWidth='sm'>
                     <Toolbar >
                         <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>
-                        <Button fullWidth sx={{ m: 1 }} onClick={() => push('/records')} endIcon={<ViewModule />}>Análisis</Button>
+                        <Button fullWidth sx={{ m: 1 }} onClick={() => push(`/records/${user.email}`)} endIcon={<ViewModule />}>Análisis</Button>
                         <AccountButton user={user} />
                     </Toolbar>
                 </Container>

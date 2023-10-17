@@ -52,18 +52,17 @@ export default function RateSequence() {
             return
         }
         toast.promise(saveRecord({ name, records, email: user.email, site }), {
-            loading: 'guardando',
+            loading: 'Generando análisis',
             success: (data) => {
                 if (data.error) {
-                    console.log(data.error)
                     setError(error)
                     return 'Error al guardar'
                 }
                 setInteract({ results: [...results, { _id: data.insertedId, name, records }] })
-                push('/records')
+                push(`/records/${user.email}`)
                 return 'Guardado!'
             },
-            error: (data) => `${data.msj}`
+            error: (data) => `${data.message}`
         }, {
             success: { icon: false },
             position: 'top-right'
