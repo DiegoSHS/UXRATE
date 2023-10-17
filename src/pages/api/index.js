@@ -1,6 +1,7 @@
 import { connex } from "@/models/database"
 import { createRecord, getRecords } from "@/models/transactions"
 import { speedinsights } from "./speed"
+import { errorRes } from "./[id]/get"
 
 export default async function handler(req, res) {
   try {
@@ -19,10 +20,9 @@ export default async function handler(req, res) {
         const ress = await createRecord(collection, { ...body, tests })
         return res.status(201).json({ msj: `inserted document`, insertedId: ress.insertedId })
       default:
-        return res.status(405).json({ msj: 'method not supported' })
+        return errorRes(res, 405, { message: 'Method not suported' })
     }
   } catch (error) {
-    return res.status(500).json({ error: { code: 500, message: error.message } })
+    return errorRes(res, 500, error)
   }
-
 }
