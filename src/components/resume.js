@@ -41,6 +41,7 @@ export const RateResult = ({ name, records, _id, site, tests }) => {
     const { chartColor, labelcolor, type } = chartProps(avg)
     const avgString = String(avg).substring(0, 4)
     const { interacts: { user } } = StoredContext()
+
     return (
         <Card sx={{ my: 1 }}>
             <CardHeader
