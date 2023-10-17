@@ -33,3 +33,5 @@ export const saveRecord = async (record) => postRequest('/api', record)
 export const deleteRecord = async (id) => postRequest(`/api/${id}`, 'del')
 
 export const retrieveRecords = async () => getRequest('/api')
+
+export const filteredRecords = async (filter) => getRequest(`/api/${filter}/get`)

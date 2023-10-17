@@ -1,4 +1,5 @@
 import { getRequest } from "@/requests/uxrecord"
+import { errorRes } from "./[id]/get"
 
 const test = {
     "captchaResult": "CAPTCHA_NOT_NEEDED",
@@ -1603,7 +1604,11 @@ export const speedinsights = async (url) => {
 }
 
 export default async function speeed(req, res) {
-    const { body: { url } } = req
-    const results = await speedinsights(url)
-    res.status(200).json(results)
+    try {
+        const { body: { url } } = req
+        const results = await speedinsights(url)
+        return res.status(200).json(results)
+    } catch (error) {
+        return errorRes(res, 500, error)
+    }
 }

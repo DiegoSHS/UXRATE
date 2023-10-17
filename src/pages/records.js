@@ -1,14 +1,26 @@
 import { RateResults } from "@/components/resume"
 import { StoredContext } from "@/context/context"
-import { deleteRecord } from "@/requests/uxrecord"
+import { deleteRecord, filteredRecords } from "@/requests/uxrecord"
 import { Box, Button, Dialog, Toolbar, Typography } from "@mui/material"
+import { useEffect } from "react"
 import toast from "react-hot-toast"
 
 export default function Records() {
-    const { interacts: { selected, openDialog, results }, setInteract } = StoredContext()
+    const { interacts: { selected, user, openDialog, results }, setInteract } = StoredContext()
     const handleClose = () => {
         setInteract({ openDialog: false })
     }
+    const dataInit = async () => {
+        const { email } = user
+        setInteract({ loading: true })
+        const results = await filteredRecords(email)
+        console.log(results)
+        setInteract({ results: results })
+        setInteract({ loading: false })
+    }
+    useEffect(() => {
+        dataInit()
+    }, [])
     const handleDelete = () => {
         toast.promise(deleteRecord(selected), {
             loading: 'Eliminando',
