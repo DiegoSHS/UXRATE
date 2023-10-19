@@ -1,6 +1,6 @@
 import { Box, Button, Paper, Stepper, Typography } from '@mui/material'
-import { useState } from 'react'
-import { RateResults } from './resume'
+import { useEffect, useState } from 'react'
+import { RateResult } from './resume'
 import { RateStep } from './steps'
 import { StoredContext } from '@/context/context'
 import { saveRecord } from '@/requests/uxrecord'
@@ -9,7 +9,7 @@ import { steps } from '@/utils/steps'
 import { signIn } from 'next-auth/react'
 
 export default function RateSequence() {
-    const { interacts: { name, results, user, site }, setInteract, records, setRecords, push } = StoredContext()
+    const { interacts: { name, user, site }, setInteract, records, setRecords, push } = StoredContext()
     const [activeStep, setActiveStep] = useState(0)
     const [sliderValue, setSliderValue] = useState(0)
     const [error, setError] = useState(null)
@@ -31,20 +31,20 @@ export default function RateSequence() {
     const handleNext = () => {
         handleRegister()
         setActiveStep(activeStep + 1)
-        setSliderValue(0)
     }
     const handleBack = () => {
         deleteRegister()
         setActiveStep(activeStep - 1)
-        setSliderValue(0)
     }
     const handleReset = () => {
         setActiveStep(0)
         setRecords([])
         setInteract({ name: null })
-        setSliderValue(0)
         push('/')
     }
+    useEffect(() => {
+        setSliderValue(0)
+    }, [activeStep])
 
     const handleSave = async () => {
         if (!user.name) {
@@ -58,7 +58,6 @@ export default function RateSequence() {
                     setError(error)
                     return 'Error al guardar'
                 }
-                setInteract({ results: [...results, { _id: data.insertedId, name, records }] })
                 push(`/records/${user.email}`)
                 return 'Guardado!'
             },
@@ -81,7 +80,7 @@ export default function RateSequence() {
             )}
             {activeStep === stepslen && (
                 <Box>
-                    <RateResults results={[{ name: name, records }]} />
+                    <RateResult name={name} records={records} site={site} />
                     <Paper square elevation={0} sx={{ p: 3 }}>
                         <Button color='secondary' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
                             Evaluar otro sitio

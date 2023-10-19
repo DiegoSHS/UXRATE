@@ -1,3 +1,4 @@
+import Records from "@/components/analysis"
 import { DetailedResult } from "@/components/resume"
 import { connex } from "@/models/database"
 import { getRecord } from "@/models/transactions"
@@ -13,5 +14,9 @@ export const getServerSideProps = async ({ query: { id } }) => {
 }
 
 export default function Analisys({ record }) {
-    return DetailedResult(JSON.parse(record))
+    return (
+        <Records >
+            {DetailedResult(JSON.parse(record))}
+        </Records>
+    )
 }

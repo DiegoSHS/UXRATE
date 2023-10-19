@@ -1,8 +1,7 @@
-import { StoredContext } from "@/context/context"
 import { Box, Button, Divider, Slider, Step, StepContent, StepLabel, Typography } from "@mui/material"
+import Link from "next/link"
 
 export const RateStep = ({ step, index, stepslen, sliderValue, handleBack, handleNext, handleSlider }) => {
-    const { push } = StoredContext()
     return (
         <Step key={step?.label}>
             <StepLabel
@@ -38,12 +37,20 @@ export const RateStep = ({ step, index, stepslen, sliderValue, handleBack, handl
                         >
                             {index === stepslen - 1 ? 'Finalizar' : 'Continuar'}
                         </Button>
-                        <Button
-                            onClick={() => { index === 0 ? push('/') : handleBack() }}
-                            sx={{ mt: 1, mr: 1 }}
-                        >
-                            {index === 0 ? 'Cancelar' : 'Atrás'}
-                        </Button>
+                        {index === 0 ? (
+                            <Link href={'/'} passHref legacyBehavior prefetch>
+                                <Button sx={{ mt: 1, mr: 1 }}>
+                                    Cancelar
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Button
+                                onClick={handleBack}
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                Atrás
+                            </Button>
+                        )}
                     </div>
                 </Box>
             </StepContent>
