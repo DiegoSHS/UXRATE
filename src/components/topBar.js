@@ -1,6 +1,6 @@
 import { StoredContext } from "@/context/context"
-import { AccountCircle, DarkMode, Home, LightMode, ViewModule } from "@mui/icons-material"
-import { AppBar, Avatar, Box, Button, Chip, Container, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Slide, Toolbar, Typography, useScrollTrigger } from "@mui/material"
+import { AccountCircle, DarkMode, LightMode } from "@mui/icons-material"
+import { AppBar, Avatar, Box, Button, Chip, Container, IconButton, ListItemIcon, Menu, MenuItem, Slide, Toolbar, Typography, useScrollTrigger } from "@mui/material"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useState } from "react"
@@ -19,7 +19,6 @@ const AccountButton = ({ user }) => {
     const [anchor, setAnchor] = useState(null)
     const open = Boolean(anchor)
     const [cookies, setCookie] = useCookies()
-    const { push } = StoredContext()
     const setTheme = () => {
         const expires = new Date(Date.now())
         expires.setFullYear(2025)
@@ -78,7 +77,7 @@ const AccountButton = ({ user }) => {
                         </Box>
                     </MenuItem>
                 </Link>
-                <MenuItem sx={{ m: 0, p: 1 }} onClick={setTheme}>
+                <MenuItem sx={{ m: 0, p: 1 }} disabled onClick={setTheme}>
                     <IconButton color="primary" aria-label="add an alarm">
                         {cookies.theme ? <LightMode /> : <DarkMode />}
                     </IconButton>
@@ -96,19 +95,18 @@ const AccountButton = ({ user }) => {
 
 export const TopBarScroll = (props) => {
     const { interacts: { user } } = StoredContext()
-
     return (
         <HideOnScroll {...props}>
-            <AppBar sx={{ backgroundColor: 'transparent', backdropFilter: 'blur(10px)' }}>
+            <AppBar sx={{ backgroundColor: 'transparent', background: '000000', backdropFilter: 'blur(10px)', boxShadow: 0 }}>
                 <Container maxWidth='sm'>
                     <Toolbar >
-                        <Link href={'/'} legacyBehavior passHref>
-                            <Button fullWidth sx={{ m: 1 }} variant="text" endIcon={<Home />}>
+                        <Link href={'/rateapp'} legacyBehavior passHref>
+                            <Button fullWidth sx={{ m: 1 }} color="primary">
                                 Inicio
                             </Button>
                         </Link>
                         <Link href={`/records/${user.email}`} legacyBehavior passHref>
-                            <Button fullWidth sx={{ m: 1 }} endIcon={<ViewModule />}>
+                            <Button fullWidth sx={{ m: 1 }} color="primary">
                                 Análisis
                             </Button>
                         </Link>

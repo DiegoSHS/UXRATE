@@ -82,10 +82,10 @@ export default function RateSequence() {
                 <Box>
                     <RateResult name={name} records={records} site={site} />
                     <Paper square elevation={0} sx={{ p: 3 }}>
-                        <Button color='secondary' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+                        <Button color='inherit' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
                             Evaluar otro sitio
                         </Button>
-                        <Button variant='contained' color='success' onClick={handleSave} sx={{ mt: 1, mr: 1 }}>
+                        <Button variant='contained' color='primary' onClick={handleSave} sx={{ mt: 1, mr: 1 }}>
                             {user.name ? 'Guardar resultados' : 'Iniciar sesión para guardar'}
                         </Button>
                         {error ? (
