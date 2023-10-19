@@ -2,6 +2,7 @@ import { StoredContext } from "@/context/context"
 import { AccountCircle, DarkMode, Home, LightMode, ViewModule } from "@mui/icons-material"
 import { AppBar, Avatar, Box, Button, Chip, Container, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Slide, Toolbar, Typography, useScrollTrigger } from "@mui/material"
 import { signIn } from "next-auth/react"
+import Link from "next/link"
 import { useState } from "react"
 import { useCookies } from "react-cookie"
 
@@ -62,19 +63,21 @@ const AccountButton = ({ user }) => {
                     'aria-labelledby': 'basic-button'
                 }}
             >
-                <MenuItem sx={{ m: 0, p: 1 }} onClick={() => { push('/login') }}>
-                    <ListItemIcon>
-                        <Avatar alt={user.name} src={user.image} />
-                    </ListItemIcon>
-                    <Box sx={{ mx: 1 }}>
-                        <Typography sx={{ mx: 1 }}>
-                            {user.name}
-                        </Typography>
-                        <Typography sx={{ mx: 1 }}>
-                            {user.email}
-                        </Typography>
-                    </Box>
-                </MenuItem>
+                <Link href={'/login'} passHref legacyBehavior>
+                    <MenuItem sx={{ m: 0, p: 1 }}>
+                        <ListItemIcon>
+                            <Avatar alt={user.name} src={user.image} />
+                        </ListItemIcon>
+                        <Box sx={{ mx: 1 }}>
+                            <Typography sx={{ mx: 1 }}>
+                                {user.name}
+                            </Typography>
+                            <Typography sx={{ mx: 1 }}>
+                                {user.email}
+                            </Typography>
+                        </Box>
+                    </MenuItem>
+                </Link>
                 <MenuItem sx={{ m: 0, p: 1 }} onClick={setTheme}>
                     <IconButton color="primary" aria-label="add an alarm">
                         {cookies.theme ? <LightMode /> : <DarkMode />}
@@ -92,15 +95,23 @@ const AccountButton = ({ user }) => {
 }
 
 export const TopBarScroll = (props) => {
-    const { push, interacts: { user } } = StoredContext()
+    const { interacts: { user } } = StoredContext()
 
     return (
         <HideOnScroll {...props}>
             <AppBar sx={{ backgroundColor: 'transparent', backdropFilter: 'blur(10px)' }}>
                 <Container maxWidth='sm'>
                     <Toolbar >
-                        <Button fullWidth sx={{ m: 1 }} onClick={() => push('/')} variant="contained" endIcon={<Home />}>Inicio</Button>
-                        <Button fullWidth sx={{ m: 1 }} onClick={() => push(`/records/${user.email}`)} endIcon={<ViewModule />}>Análisis</Button>
+                        <Link href={'/'} legacyBehavior passHref>
+                            <Button fullWidth sx={{ m: 1 }} variant="text" endIcon={<Home />}>
+                                Inicio
+                            </Button>
+                        </Link>
+                        <Link href={`/records/${user.email}`} legacyBehavior passHref>
+                            <Button fullWidth sx={{ m: 1 }} endIcon={<ViewModule />}>
+                                Análisis
+                            </Button>
+                        </Link>
                         <AccountButton user={user} />
                     </Toolbar>
                 </Container>

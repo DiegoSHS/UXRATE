@@ -1,4 +1,5 @@
 import Records from "@/components/analysis"
+import { RateResults } from "@/components/resume"
 import { connex } from "@/models/database"
 import { getRecords } from "@/models/transactions"
 
@@ -12,5 +13,9 @@ export const getServerSideProps = async () => {
     }
 }
 export default function RecordsIndex({ records }) {
-    return <Records records={JSON.parse(records)} />
+    return (
+        <Records >
+            <RateResults records={JSON.parse(records)} />
+        </Records>
+    )
 }

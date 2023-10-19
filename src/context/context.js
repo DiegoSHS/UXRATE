@@ -13,7 +13,7 @@ export const Context = (props) => {
     const [records, setRecords] = useState([])
     const [interacts, setInteracts] = useState({
         user: {},
-        visible: true,
+        expanded: false,
         loading: false,
         openDialog: false,
         selected: null,
@@ -26,7 +26,6 @@ export const Context = (props) => {
         const { user: { email } } = interacts
         setInteract({ loading: true })
         const results = await filteredRecords(email)
-        console.log(results)
         setInteract({ results: results })
         setInteract({ loading: false })
     }
