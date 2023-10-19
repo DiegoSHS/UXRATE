@@ -68,7 +68,7 @@ export const DetailedResult = ({ name, records, _id, site, tests }) => {
     const avgString = String(avg).substring(0, 4)
 
     return (
-        <Card sx={{ my: 1 }}>
+        <Card sx={{ my: 1, backgroundColor:'transparent', background:'transparent', boxSizing:0}}>
             <CardHeader
                 avatar={
                     <Avatar src={user.image} aria-label="analysis" />
@@ -173,7 +173,7 @@ export const RateResult = ({ name, records, _id, site, tests }) => {
     }
 
     return (
-        <Card sx={{ my: 1 }}>
+        <Card sx={{ my: 1, backgroundColor:'transparent', background:'transparent', boxSizing:0}}>
             <CardHeader
                 avatar={
                     <Avatar src={user.image} aria-label="analysis" />
