@@ -2,21 +2,17 @@ import { StoredContext } from '@/context/context'
 import { urlValidator } from '@/utils/validate'
 import { StarHalf, Style } from '@mui/icons-material'
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
+import Link from 'next/link'
 import { useState } from 'react'
 
 export default function VerticalLinearStepper() {
-  const { interacts: { name, site }, setInteract, push } = StoredContext()
+  const { interacts: { name, site }, setInteract } = StoredContext()
   const [error, setError] = useState(false)
+
   const handleChange = (e) => {
     setInteract({ [e.target.name]: e.target.value })
-  }
-  const handleSubmit = (e) => {
-    e.preventDefault()
     const err = urlValidator(site)
     setError(err)
-    if ((!name || name == '') || err) return
-    setInteract({ visible: false })
-    push('/advice')
   }
   return (
     <Box
@@ -42,10 +38,9 @@ export default function VerticalLinearStepper() {
       <Typography variant="body2" textAlign='center'>
         Obten una calificación de tu app con base en 12 leyes de UX y Tests automatizados
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+      <Box component="form" onChange={handleChange} noValidate sx={{ mt: 1 }}>
         <TextField
           defaultValue={name}
-          onChange={handleChange}
           margin="normal"
           required
           fullWidth
@@ -57,7 +52,6 @@ export default function VerticalLinearStepper() {
         />
         <TextField
           defaultValue={site}
-          onChange={handleChange}
           margin="normal"
           required
           fullWidth
@@ -66,14 +60,17 @@ export default function VerticalLinearStepper() {
           name="site"
           error={error}
         />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Aceptar
-        </Button>
+        <Link href={'/advice'} passHref legacyBehavior>
+          <Button
+            disabled={(!name || name == '') || error}
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Aceptar
+          </Button>
+        </Link>
       </Box>
     </Box>
   )

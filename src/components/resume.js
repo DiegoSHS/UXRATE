@@ -1,10 +1,11 @@
 import { StoredContext } from "@/context/context"
-import { Add, Delete, ExpandMore, Favorite, MoreVert, ReadMore } from "@mui/icons-material"
+import { Add, Delete, ExpandMore, ReadMore } from "@mui/icons-material"
 import { Avatar, Box, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, CircularProgress, Collapse, Fab, Grid, IconButton, LinearProgress, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { labels } from "@/utils/steps"
 import { RateChart, chartProps } from "./decachart"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
+import Link from "next/link"
 
 const recomendations = {
     'Ideal': 'En general no hay recomendaciones muy significantes, el sitio web funciona de forma que los usuarios se sienten gratificados con su navegación en este',
@@ -56,7 +57,7 @@ export const DetailedResult = ({ name, records, _id, site, tests }) => {
     const sliderValues = records.map(e => e.sliderValue)
     const testsRate = tests ? (tests.map(e => e.score).reduce((p, n) => p + n, 0) / 3).toString().substring(0, 3) : false
     const [expanded, setExpanded] = useState({ ex: false, index: 0 })
-    const { setInteract } = StoredContext()
+    const { setInteract, interacts: { user } } = StoredContext()
     const handleDelete = (e) => {
         setInteract({ selected: _id })
         setInteract({ openDialog: true })
@@ -65,7 +66,6 @@ export const DetailedResult = ({ name, records, _id, site, tests }) => {
     const avg = (sum / records.length)
     const { chartColor, labelcolor, type } = chartProps(avg)
     const avgString = String(avg).substring(0, 4)
-    const { interacts: { user } } = StoredContext()
 
     return (
         <Card sx={{ my: 1 }}>
@@ -156,23 +156,21 @@ export const DetailedResult = ({ name, records, _id, site, tests }) => {
 }
 
 export const RateResult = ({ name, records, _id, site, tests }) => {
-    const { push } = StoredContext()
+    const { setInteract, interacts: { user, expanded } } = StoredContext()
     const sliderValues = records.map(e => e.sliderValue)
     const testsRate = tests ? (tests.map(e => e.score).reduce((p, n) => p + n, 0) / 3).toString().substring(0, 3) : false
-    const [expanded, setExpanded] = useState(false)
-    const handleExpanded = () => {
-        setExpanded(!expanded)
-    }
-    const { setInteract } = StoredContext()
-    const handleDelete = (e) => {
-        setInteract({ selected: _id })
-        setInteract({ openDialog: true })
-    }
     const sum = sliderValues.reduce((p, n) => p + n, 0)
     const avg = (sum / records.length)
     const { chartColor, labelcolor, type } = chartProps(avg)
     const avgString = String(avg).substring(0, 4)
-    const { interacts: { user } } = StoredContext()
+
+    const handleExpanded = () => {
+        setInteract({ expanded: !expanded })
+    }
+    const handleDelete = (e) => {
+        setInteract({ selected: _id })
+        setInteract({ openDialog: true })
+    }
 
     return (
         <Card sx={{ my: 1 }}>
@@ -181,9 +179,11 @@ export const RateResult = ({ name, records, _id, site, tests }) => {
                     <Avatar src={user.image} aria-label="analysis" />
                 }
                 action={
-                    <IconButton aria-label="detalles" onClick={() => { push(`/record/${_id}`) }}>
-                        <ReadMore />
-                    </IconButton>
+                    <Link href={`/record/${_id}`} passHref legacyBehavior>
+                        <IconButton disabled={!tests} aria-label="detalles">
+                            <ReadMore />
+                        </IconButton>
+                    </Link>
                 }
                 title={`Análisis: ${name}`}
                 subheader={site}
@@ -265,8 +265,14 @@ export const RateResult = ({ name, records, _id, site, tests }) => {
     )
 }
 
-export const RateResults = ({ results }) => {
-    const { push, interacts: { loading } } = StoredContext()
+export const RateResults = ({ records }) => {
+    const { interacts: { loading, results }, setInteract } = StoredContext()
+    const dataInit = () => {
+        setInteract({ loading: true })
+        setInteract({ results: records })
+        setInteract({ loading: false })
+    }
+    useEffect(dataInit, [])
     if (results.length === 0) {
         return (
             <Grid sx={{
@@ -278,9 +284,13 @@ export const RateResults = ({ results }) => {
                 <Typography align="center">{loading ? 'Cargando...' : 'Aún no hay nada registrado'}</Typography>
                 {loading ?
                     (<CircularProgress sx={{ m: 2 }} />) :
-                    (<Fab sx={{ m: 2 }} color="primary" onClick={() => { push('/') }} aria-label="Añadir nuevo">
-                        <Add />
-                    </Fab>)
+                    (
+                        <Link href={'/'} passHref legacyBehavior>
+                            <Fab sx={{ m: 2 }} color="primary" aria-label="Añadir nuevo">
+                                <Add />
+                            </Fab>
+                        </Link>
+                    )
                 }
             </Grid >
         )
