@@ -95,6 +95,7 @@ const AccountButton = ({ user }) => {
 
 export const TopBarScroll = (props) => {
     const { interacts: { user } } = StoredContext()
+
     return (
         <HideOnScroll {...props}>
             <AppBar sx={{ backgroundColor: 'transparent', background: '000000', backdropFilter: 'blur(10px)', boxShadow: 0 }}>
