@@ -52,6 +52,11 @@ export default function VerticalLinearStepper() {
           autoFocus
         />
         <TextField
+          onPaste={(e) => {
+            setInteract({ site: e.clipboardData.getData('text') })
+            const err = urlValidator(site)
+            setError(err)
+          }}
           defaultValue={site}
           margin="normal"
           required
